@@ -1,0 +1,20 @@
+{
+  "carefulharvest.config.title": "Careful Harvest",
+  "carefulharvest.config.nonSneakingBreak": "Non-sneaking break",
+  "carefulharvest.config.nonSneakingBreak.tooltip": "Drop when a player breaks a plant without sneaking (with any item).",
+  "carefulharvest.config.fluids": "Fluids",
+  "carefulharvest.config.fluids.tooltip": "Drop when water flows onto a plant. (Lava never drops anything, as in vanilla.)",
+  "carefulharvest.config.explosions": "Explosions",
+  "carefulharvest.config.explosions.tooltip": "Drop when an explosion destroys a plant.",
+  "carefulharvest.config.supportBroken": "Support broken",
+  "carefulharvest.config.supportBroken.tooltip": "Drop when a plant pops off because the block below it was removed (by anyone, including a sneaking player).",
+  "carefulharvest.config.other": "Other",
+  "carefulharvest.config.other.tooltip": "Drop for every other cause: pistons, enderman deaths, other mods, ...",
+  "carefulharvest.config.exemptSoil": "Exempt soil (one block id or #tag per line)",
+  "carefulharvest.config.exemptSoil.placeholder": "minecraft:moss_block",
+  "carefulharvest.config.exemptSoil.tooltip": "Plants standing on these blocks are not affected by Careful Harvest at all.",
+  "carefulharvest.config.status.ok": "Done saves and applies here. Servers use their own file.",
+  "carefulharvest.config.status.remote": "Connected to a server: this edits only your local config file.",
+  "carefulharvest.config.status.invalid": "%s invalid entr(y/ies) will be skipped: %s",
+  "carefulharvest.config.status.saveFailed": "Could not save: %s"
+}

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "carefulharvest_gametest",
+  "version": "1.1.0",
+  "name": "Careful Harvest Game Tests",
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.carefulharvest.test.CarefulHarvestFabricGameTestSetup"
+    ],
+    "fabric-gametest": [
+      "dev.carefulharvest.test.CarefulHarvestGameTests"
+    ],
+    "fabric-client-gametest": [
+      "dev.carefulharvest.test.client.CarefulHarvestClientSmokeTest"
+    ]
+  },
+  "depends": {
+    "carefulharvest": "*",
+    "fabric-gametest-api-v1": "*"
+  }
+}

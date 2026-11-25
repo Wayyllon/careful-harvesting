@@ -1,0 +1,114 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.fabricmc.fabric-loom'
+}
+
+repositories {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'TerraformersMC'
+                url = uri('https://maven.terraformersmc.com/releases')
+            }
+        }
+        filter {
+            includeGroup('com.terraformersmc')
+        }
+    }
+}
+
+dependencies {
+    minecraft("com.mojang:minecraft:${minecraft_version}")
+    implementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
+    // Optional: only the API is used, for the config screen entrypoint. Not bundled, not required.
+    compileOnly("com.terraformersmc:modmenu:${modmenu_version}") {
+        transitive = false
+    }
+}
+
+loom {
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+    runs {
+        client {
+            client()
+            setConfigName('Fabric Client')
+            ideConfigGenerated(true)
+            runDir('runs/client')
+        }
+        server {
+            server()
+            setConfigName('Fabric Server')
+            ideConfigGenerated(true)
+            runDir('runs/server')
+        }
+    }
+}
+
+// Server game tests live in src/gametest (a separate test mod, not shipped in the jar).
+// `./gradlew :fabric:runGameTest` runs them; Loom also wires them into `check`/`build`.
+fabricApi {
+    configureTests {
+        createSourceSet = true
+        modId = "${mod_id}_gametest"
+        enableGameTests = true
+        // Client smoke test of the config screen: not part of `check` (it needs a display), run
+        // with `xvfb-run ./gradlew :fabric:runClientGameTest`.
+        enableClientGameTests = true
+        eula = true
+    }
+}
+// JUnit-style XML report of the game test results.
+loom.runs.matching { it.name == 'gameTest' }.configureEach {
+    vmArg("-Dfabric-api.gametest.report-file=${project.layout.buildDirectory.file('reports/gametest/TEST-gametest.xml').get().asFile}")
+}
+// Plain JUnit test that the client-only classes load (see src/test).
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:${junit_version}"))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+    testImplementation("com.terraformersmc:modmenu:${modmenu_version}") {
+        transitive = false
+    }
+}
+tasks.named('test', Test) {
+    useJUnitPlatform()
+}
+
+// Mod Menu for the client smoke test (environment "client", so the server game tests skip it).
+dependencies {
+    gametestCompileOnly("com.terraformersmc:modmenu:${modmenu_version}") {
+        transitive = false
+    }
+    gametestRuntimeOnly("com.terraformersmc:modmenu:${modmenu_version}") {
+        transitive = false
+    }
+}
+// The test cases themselves are loader-independent and shared with NeoForge.
+sourceSets.named('gametest') {
+    java.srcDir(rootProject.file('common/src/gametest/java'))
+    resources.srcDir(rootProject.file('common/src/gametest/resources'))
+}
+
+// mcgradleconventions loader attribute
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+['apiElements', 'runtimeElements', 'sourcesElements', 'includeInternal'].each { variant ->
+    configurations.named(variant) {
+        attributes {
+            attribute(loaderAttribute, 'fabric')
+        }
+    }
+}
+sourceSets.configureEach {
+    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant ->
+        configurations.named(variant) {
+            attributes {
+                attribute(loaderAttribute, 'fabric')
+            }
+        }
+    }
+}

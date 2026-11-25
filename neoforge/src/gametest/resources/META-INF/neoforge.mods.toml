@@ -1,0 +1,16 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT"
+
+[[mods]]
+modId = "carefulharvest_gametest"
+version = "1.1.0"
+displayName = "Careful Harvest Game Tests"
+description = '''Server game tests for Careful Harvest (development only, not shipped).'''
+
+[[dependencies.carefulharvest_gametest]]
+modId = "carefulharvest"
+type = "required"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
